@@ -262,7 +262,13 @@ To compile the contract:
 npm run compile
 ```
 
+Successful compile output (all 3 circuits build into `contracts/managed/`):
+
+![Successful Compact compile](public/compile.png)
+
 ## Deployment Info (Preview Network)
+
+The following contract has been deployed to the Midnight **preview** network via the 1AM wallet frontend:
 
 The following contract has been deployed to the Midnight **preview** network via the 1AM wallet frontend:
 
@@ -273,6 +279,10 @@ The following contract has been deployed to the Midnight **preview** network via
 | Admin Commitment | `249cb77109236a54e1efb83d47cfd7f9d20a055ad6e0510c3ed98ef7d2761e30` |
 | Nullifiers Used | `1` |
 | Last Tx | `midnight:transaction[v9][signature]` |
+
+Deployed contract as shown on the preview network:
+
+![Deployed ZK allowlist contract](public/deployment.png)
 
 ## Next.js Frontend
 
