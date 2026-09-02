@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@contract/*": ["./midnight-allowlist/contracts/managed/zk-allowlist/*"]
     }
   },
   "include": [
@@ -30,5 +31,11 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "midnight-allowlist/src",
+    "midnight-allowlist/tests",
+    "midnight-allowlist/*.ts",
+    "midnight-allowlist/vitest.config.ts"
+  ]
 }

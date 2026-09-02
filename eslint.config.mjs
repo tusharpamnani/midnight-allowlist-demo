@@ -12,7 +12,28 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "midnight-allowlist/**",
+    ".next/dev/**",
   ]),
+  // The Midnight SDK requires `any` casts and dynamic require for
+  // compiler-generated contract bindings. Relax strict TS rules here.
+  {
+    files: [
+      "lib/**",
+      "app/hooks/**",
+      "contexts/**",
+      "components/**",
+      "next.config.ts",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;
