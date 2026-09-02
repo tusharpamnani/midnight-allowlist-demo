@@ -1,0 +1,8 @@
+/node_modules
+/data
+/contracts/managed/*
+!/contracts/managed/zk-allowlist
+/dist
+/midnight-level-db
+/deployment.json
+first-draft.txt
