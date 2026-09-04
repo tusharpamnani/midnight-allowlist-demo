@@ -1,8 +1,10 @@
 # ZK Allowlist: Privacy-Preserving Membership Proofs on Midnight
 
-[![Generic badge](https://img.shields.io/badge/Compact%20Toolchain-0.31.1-1abc9c.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/midnight--js-4.1.1-blueviolet.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/wallet--sdk-1.2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Tests%20Cases%20Passed-144-green.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Merkle%20Depth-10-orange.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/Compact%20Toolchain-0.31.1-1abc9c.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo) [![Generic badge](https://img.shields.io/badge/midnight--js-4.1.1-blueviolet.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo) [![Generic badge](https://img.shields.io/badge/wallet--sdk-1.2.0-blue.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo) [![Generic badge](https://img.shields.io/badge/Tests%20Cases%20Passed-144-green.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo) [![Generic badge](https://img.shields.io/badge/Merkle%20Depth-10-orange.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo) [![Tests](https://github.com/tusharpamnani/midnight-allowlist-demo/actions/workflows/test.yml/badge.svg)](https://github.com/tusharpamnani/midnight-allowlist-demo/actions/workflows/test.yml)
 
 A CLI-based Zero-Knowledge Allowlist system that lets users prove membership in a set **without revealing their identity**, built on Midnight's Compact contract language.
+
+**[Live Demo](https://midnight-allowlist-demo.vercel.app/)** · Requires [1AM](https://1am.dev) or Lace wallet on Preprod
 
 ## Product Idea
 
@@ -266,11 +268,11 @@ Successful compile output (all 3 circuits build into `contracts/managed/`):
 
 ![Successful Compact compile](public/compile.png)
 
-## Deployment Info (Preview Network)
+## Deployment Info (Preprod Network)
 
-The following contract has been deployed to the Midnight **preview** network via the 1AM wallet frontend:
+The following contract has been deployed to the Midnight **preprod** network via the 1AM wallet frontend:
 
-The following contract has been deployed to the Midnight **preview** network via the 1AM wallet frontend:
+The following contract has been deployed to the Midnight **preprod** network via the 1AM wallet frontend:
 
 | Field | Value |
 |-------|-------|
@@ -280,13 +282,13 @@ The following contract has been deployed to the Midnight **preview** network via
 | Nullifiers Used | `1` |
 | Last Tx | `midnight:transaction[v9][signature]` |
 
-Deployed contract as shown on the preview network:
+Deployed contract as shown on the preprod network:
 
 ![Deployed ZK allowlist contract](public/deployment.png)
 
 ## Next.js Frontend
 
-A full browser frontend lives at the repo root (`/home/mf/allowlist`), connecting to the 1AM wallet on the preview network:
+A full browser frontend lives at the repo root (`/home/mf/allowlist`), connecting to the 1AM wallet on the preprod network:
 
 ```bash
 # From repo root
@@ -295,7 +297,7 @@ npm run dev -- --webpack
 ```
 
 The frontend supports:
-- **Connect Wallet** — 1AM browser extension, preview network
+- **Connect Wallet** — 1AM browser extension, preprod network
 - **Deploy** — deploys a new ZK allowlist contract
 - **Members (local)** — add member secrets locally, builds the Merkle tree in-browser (persisted to localStorage)
 - **Admin** — Setup Admin (first-time), Sync Local Root (pushes tree root to chain)
@@ -332,6 +334,12 @@ Midnight splits a contract into **public ledger state** (visible to everyone) an
 
 The on-chain verifier checks the ZK proof against only the public root. The secret, leaf, path, and index exist solely inside the prover's witness — the network never sees them, and the proof is zero-knowledge: it can't be inverted to recover them.
 
+## Privacy Claim
+
+**A member can prove they are on the allowlist without revealing who they are.**
+
+The ZK circuit (`verifyAndUse`) proves knowledge of a secret whose Poseidon hash is a leaf in the on-chain Merkle tree — without disclosing the secret, the leaf, the leaf index, or the Merkle path. The only on-chain artifact of a proof is a domain-separated nullifier (`persistentHash(tag || secret || context)`), which prevents double-use while remaining unlinkable to the member's identity. Even a full transcript observer learns nothing beyond the fact that *some* valid member consumed a slot.
+
 ## Security Model
 
 ### Privacy Guarantees
@@ -346,6 +354,20 @@ The verifier does **not** see:
 - Which leaf in the tree
 - The member's position (index)
 - The Merkle path
+
+### What an Observer Can and Cannot Learn
+
+An observer monitoring the chain (indexer, explorer, anyone) **can** learn:
+- That a contract named zk-allowlist exists with a Merkle root and an admin commitment
+- That a valid membership proof was submitted and a nullifier was consumed
+- How many members-proven events have occurred (size of `used_nullifiers`)
+
+An observer **cannot** learn:
+- Which member (secret) produced any given nullifier — nullifiers are unlinkable hashes
+- Whether two nullifiers were produced by the same or different members
+- The admin secret behind `admin_commitment`
+- The Merkle path, leaf position, or any witness data
+- Any information about members never proven on-chain
 
 ### Replay Protection
 
@@ -381,6 +403,8 @@ For witness compatibility, user-provided string secrets are normalized into 32-b
       Tests  144 passed (144)
    Duration  ~10s
 ```
+
+![Test output: 144 tests passing](public/test-output.svg)
 
 ### Test Commands
 

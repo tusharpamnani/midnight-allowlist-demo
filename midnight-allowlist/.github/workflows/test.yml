@@ -1,0 +1,28 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: midnight-allowlist/package-lock.json
+
+      - name: Install dependencies
+        working-directory: midnight-allowlist
+        run: npm ci
+
+      - name: Run tests
+        working-directory: midnight-allowlist
+        run: npm test
