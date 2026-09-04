@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "build": "mkdir -p public/contract && cp -r midnight-allowlist/contracts/managed/zk-allowlist public/contract/zk-allowlist && next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
